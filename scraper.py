@@ -9,7 +9,7 @@ search = input("Enter search title: ").title()
 path = os.getcwd()
 
 # create a folder with the search title
-folder = os.path.join(path, search)
+folder = os.path.join(path, "downloads")
 
 if os.path.isdir(folder): print(f"Folder with the name {search} already exists!")
 else: 
