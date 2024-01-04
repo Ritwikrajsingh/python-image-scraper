@@ -3,21 +3,25 @@ from requests import get
 from skimage import io
 import cv2, os
 
-search = input("Enter search title: ").title()
+search_keyword = input("Enter search title: ").title()
 
 # get current working directory
 path = os.getcwd()
 
-# create a folder with the search title
-folder = os.path.join(path, "downloads")
+# create a folder for output files
+base_output_folder_name = "downloads"
+base_output_folder = os.path.join(path, base_output_folder_name)
+if not os.path.isdir(base_output_folder): os.mkdir(base_output_folder)
 
-if os.path.isdir(folder): print(f"Folder with the name {search} already exists!")
-else: 
-    os.mkdir(folder)
-    print(f"Folder with the name {search} created!")
+# create a subfolder for the search query
+output_folder = os.path.join(base_output_folder, search_keyword)
+if not os.path.isdir(output_folder): os.mkdir(output_folder)
+
+
+print(f"Output images will be saved inside {base_output_folder}/{search_keyword} directory" )
 
 # get the html of the search page
-url = f"https://www.google.com/search?q={search}&tbm=isch"
+url = f"https://www.google.com/search?q={search_keyword}&tbm=isch"
 page = get(url)
 soup = bs(page.text, "html.parser")
 
@@ -38,10 +42,10 @@ for index, image in enumerate(images):
     # convert to RGB
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    cv2.imshow(search, img)
+    cv2.imshow(search_keyword, img)
 
     # image name and path
-    image_path = os.path.join(folder, f"{search}{index}.jpg")
+    image_path = os.path.join(output_folder, f"{search_keyword}{index}.jpg")
     
     # save the image
     print(f"Saving to {image_path}")
